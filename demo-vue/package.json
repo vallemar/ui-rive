@@ -3,8 +3,8 @@
   "license": "SEE LICENSE IN <your-license-filename>",
   "repository": "<fill-your-repository-here>",
   "dependencies": {
-    "@nativescript-community/ui-lottie": "link:../plugin",
-    "@nativescript/core": "~8.4.0",
+    "@nativescript-community/ui-rive": "file:../plugin",
+    "@nativescript/core": "^8.4.7",
     "nativescript-vue": "~2.9.3"
   },
   "devDependencies": {

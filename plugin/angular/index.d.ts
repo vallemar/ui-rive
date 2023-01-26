@@ -1,4 +1,4 @@
-export declare class LottieViewDirective {
+export declare class RiveViewDirective {
 }
-export declare class NativeScriptLottieModule {
+export declare class NativeScriptRiveModule {
 }

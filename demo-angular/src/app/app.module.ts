@@ -3,7 +3,7 @@ import {
   NO_ERRORS_SCHEMA
 } from '@angular/core';
 import { NativeScriptModule } from '@nativescript/angular';
-import { NativeScriptLottieModule } from '@nativescript-community/ui-lottie/angular';
+import { NativeScriptRiveModule } from '@nativescript-community/ui-rive/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeModule } from './home/home.module';

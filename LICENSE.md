@@ -1,7 +1,7 @@
 The MIT License (MIT)
 
-	nativescript-lottie
-	Copyright (c) 2017, Brad Martin
+	nativescript-rive
+	Copyright (c) 2017, Juan de Dios Martinez
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy of
 	this software and associated documentation files (the "Software"), to deal in

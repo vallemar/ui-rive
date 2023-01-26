@@ -1,8 +1,8 @@
 {
-    "name": "@nativescript-community/ui-lottie",
+    "name": "@nativescript-community/ui-rive",
     "version": "5.0.5",
-    "description": "NativeScript plugin to expose AirBnB Lottie library",
-    "main": "lottie",
+    "description": "NativeScript plugin to expose Rive library",
+    "main": "rive",
     "sideEffects": false,
     "typings": "index.d.ts",
     "nativescript": {
@@ -17,7 +17,7 @@
     },
     "keywords": [
         "NativeScript",
-        "@nativescript-community/ui-lottie",
+        "@nativescript-community/ui-rive",
         "Lottie",
         "Android",
         "Animation",
@@ -55,7 +55,7 @@
     "bugs": {
         "url": "https://github.com/farfromrefug/nativescript-lottie/issues"
     },
-    "homepage": "https://github.com/farfromrefug/nativescript-lottie",
+    "homepage": "https://github.com/farfromrefug/nativescript-rive",
     "readmeFilename": "README.md",
     "gitHead": "bb14c9536defaecdd768efcfc91e911282430d76"
 }

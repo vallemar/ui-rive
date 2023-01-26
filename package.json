@@ -1,8 +1,8 @@
 {
-  "name": "@nativescript-community/ui-lottie",
+  "name": "@nativescript-community/ui-rive",
   "version": "4.0.1",
-  "description": "NativeScript plugin to expose AirBnB Lottie library",
-  "main": "nativescript-lottie",
+  "description": "NativeScript plugin to expose Rive library",
+  "main": "nativescript-rive",
   "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
@@ -16,38 +16,22 @@
   },
   "keywords": [
     "NativeScript",
-    "nativescript-lottie",
-    "Lottie",
+    "nativescript-rive",
+    "Rive",
     "Android",
     "Animation",
     "iOS",
     "TypeScript",
-    "bradmartin"
+    "vallemar"
   ],
   "author": {
-    "name": "Brad Martin",
-    "email": "bradwaynemartin@gmail.com"
+    "name": "Juan de Dios Martinez",
+    "email": "vallemardeveloper@gmail.com"
   },
   "contributors": [
     {
-      "name": "Nathan Walker",
-      "email": "walkerrunpdx@gmail.com"
-    },
-    {
-      "name": "JB",
-      "url": "https://github.com/rhanb"
-    },
-    {
-      "name": "Dirk Rudolph",
-      "url": "https://github.com/Buuhuu"
-    },
-    {
-      "name": "Hamdi Wanis",
-      "url": "https://github.com/hamdiwanis"
-    },
-    {
-      "name": "itstheceo",
-      "url": "https://github.com/itstheceo"
+      "name": "farfromrefug",
+      "email": "farfromrefug@gmail.com"
     }
   ],
   "license": "MIT",
@@ -83,7 +67,7 @@
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
     "@nativescript/angular": "^14.2.7",
-    "@nativescript/core": "~8.4.1",
+    "@nativescript/core": "^8.4.7",
     "@nativescript/types-android": "~8.4.0",
     "@nativescript/types-ios": "~8.4.0",
     "@nativescript/webpack": "~5.0.12",

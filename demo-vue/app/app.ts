@@ -1,9 +1,9 @@
 import Vue from 'nativescript-vue';
-import LottieView from '@nativescript-community/ui-lottie/vue';
+import RiveView from '@nativescript-community/ui-rive/vue';
 
 import Home from './components/Home.vue';
 
-Vue.use(LottieView);
+Vue.use(RiveView);
 
 new Vue({
     template: `

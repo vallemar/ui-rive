@@ -22,8 +22,8 @@
         "baseUrl": ".",
         "outDir": "./plugin",
         "paths": {
-            "@nativescript-community/ui-lottie": ["src/lottie"],
-            "@nativescript-community/ui-lottie/*": ["src/*"]
+            "@nativescript-community/ui-rive": ["src/rive"],
+            "@nativescript-community/ui-rive/*": ["src/*"]
         },
         "plugins": [
           { "transform": "@nativescript/webpack/dist/transformers/NativeClass", "type": "raw" }

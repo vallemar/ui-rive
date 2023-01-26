@@ -1,15 +1,15 @@
 import { Directive, NgModule } from '@angular/core';
 import { registerElement } from '@nativescript/angular';
 // @ts-ignore
-import { LottieView } from '@nativescript-community/ui-lottie';
+import {RiveView} from "@nativescript-community/ui-rive";
 
-@Directive({ selector: 'LottieView' })
-export class LottieViewDirective {}
+@Directive({ selector: 'RiveView' })
+export class RiveViewDirective {}
 
 @NgModule({
-    declarations: [LottieViewDirective],
-    exports: [LottieViewDirective]
+    declarations: [RiveViewDirective],
+    exports: [RiveViewDirective]
 })
-export class NativeScriptLottieModule {}
+export class NativeScriptRiveModule {}
 
-registerElement('LottieView', () => LottieView);
+registerElement('RiveView', () => RiveView);

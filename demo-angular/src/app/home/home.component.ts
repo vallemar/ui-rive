@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LottieView } from '@nativescript-community/ui-lottie';
+import { RiveView } from '@nativescript-community/ui-rive';
 import { Color } from '@nativescript/core';
 
 const ANDROID_WAVE_KEYPATHS = [
@@ -28,46 +28,46 @@ export class HomeComponent {
     /**
    * For demoing cycling through the sample animations.
    */
-    private _lottieViewOne: LottieView;
+    private _lottieViewOne: RiveView;
 
     /**
    * For demoing changing colors and opacity dynamically at runtime.
    */
-    private _lottieViewTwo: LottieView;
+    private _lottieViewTwo: RiveView;
 
     /**
    * For demoing partially animating a composition.
    */
-    private _lottieViewThree: LottieView;
+    private _lottieViewThree: RiveView;
 
     /**
    * For demoing the completion block (i.e for async work).
    */
-    private _lottieViewFour: LottieView;
+    private _lottieViewFour: RiveView;
 
     public firstLottieLoaded(event) {
-        this._lottieViewOne = event.object as LottieView;
+        this._lottieViewOne = event.object as RiveView;
         this._lottieViewOne.autoPlay = true;
         this._lottieViewOne.loop = true;
         this._lottieViewOne.src = this.animations[this.animationIndex];
     }
 
     public secondLottieLoaded(event) {
-        this._lottieViewTwo = event.object as LottieView;
+        this._lottieViewTwo = event.object as RiveView;
         this._lottieViewTwo.autoPlay = true;
         this._lottieViewTwo.loop = true;
         this._lottieViewTwo.src = 'AndroidWave.json';
     }
 
     public thirdLottieLoaded(event) {
-        this._lottieViewThree = event.object as LottieView;
+        this._lottieViewThree = event.object as RiveView;
         this._lottieViewThree.autoPlay = true;
         this._lottieViewThree.loop = false;
         this._lottieViewThree.src = 'Mobilo/N.json';
     }
 
     public fourthLottieLoaded(event) {
-        this._lottieViewFour = event.object as LottieView;
+        this._lottieViewFour = event.object as RiveView;
         this._lottieViewFour.autoPlay = false;
         this._lottieViewFour.src = 'doughnut.json';
 
