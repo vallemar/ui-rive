@@ -18,26 +18,12 @@ import Charset = java.nio.charset.Charset;
 import FileInputStream = java.io.FileInputStream;
 import {RiveAlignment, RiveDirection, RiveFit, RiveLoop} from "@nativescript-community/ui-rive/index";
 
+
 let LottieProperty;
 let LottieKeyPath;
 let LottieValueCallback;
 
 const cache = new Map();
-
-/*function loadLottieJSON(iconSrc) {
-    const app: Folder = <Folder>knownFolders.currentApp();
-    const folder: Folder = <Folder>app.getFolder("app/assets");
-    const file: File = folder.getFile("button.riv");
-    if (!cache.has(iconSrc)) {
-        const file = File.fromPath(iconSrc);
-        return file.readText().then((r) => {
-            cache.set(iconSrc, r);
-            return r;
-        });
-    }
-    return Promise.resolve(cache.get(iconSrc));
-}*/
-
 
 export class RiveView extends RiveViewBase {
 
@@ -48,59 +34,40 @@ export class RiveView extends RiveViewBase {
         return new app.rive.runtime.kotlin.RiveAnimationView(this._context, null);
     }
 
-    animatorListener;
-
     public initNativeView(): void {
-
     }
 
     public disposeNativeView(): void {
-
         super.disposeNativeView();
     }
 
-    [srcProperty.setNative](src: string) {
-        const view = this.nativeViewProtected;
-//TODO
-
+    async [srcProperty.setNative](src: string) {
         if (!src) {
             console.log("[ui-rive] File not supported")
         } else if (src.startsWith(Utils.RESOURCE_PREFIX)) {
             const resName = src.replace(Utils.RESOURCE_PREFIX + "raw/", '').replace(".riv", "");
             const inStream: InputStream = this._context.getResources().openRawResource(this._context.getResources().getIdentifier(resName, "raw", this._context.getPackageName()));
-            // @ts-ignore
-            this.bytes = inStream.readBytes()
+            const buffer = Array.create("byte", inStream.available());
+            inStream.read(buffer);
+            this.bytes = buffer
         } else {
-            if (!/.(json|zip|riv)$/.test(src)) {
+            if (!/.(riv)$/.test(src)) {
                 src += '.riv';
             }
-            if (src[0] === '~') {
-                console.log("[ui-rive] File not supported")
+            if (src[0] === '~' || src[0] === '@') {
                 const app: Folder = <Folder>knownFolders.currentApp();
                 const filename = src.replace(/^.*[\\\/]/, '')
-                const folder: Folder = <Folder>app.getFolder("app/" + src.substring(2).replace(filename, ""));
+                const folder: Folder = <Folder>app.getFolder(src.substring(2).replace(filename, ""));
                 const file: File = folder.getFile(filename);
-                const fileText = file.readTextSync(null, "UTF-8");
-                console.log(file.path)
-                const javaFile = new java.io.File(file.path);
-                console.log(this.nativeViewProtected.getFile())
-                const targetStream: InputStream = new FileInputStream(javaFile);
-                const blob = (Array as any).create("byte", file.size);
-                for (let i = 0; i < blob.length; i++) {
-                    blob[i] = (file as any)._buffer[i];
-                }
-                // @ts-ignore
-                this.bytes = blob
+                this.bytes = await file.read()
             } else {
                 console.log("[ui-rive] File not supported")
             }
         }
 
         if (this.autoPlay) {
-            this.nativeViewProtected.reset();
             this.init();
         }
-
     }
 
     [autoPlayProperty.setNative](autoPlay: boolean) {

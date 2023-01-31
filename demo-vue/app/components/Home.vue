@@ -9,7 +9,10 @@
         <Span class="fa" text.decode="&#xf135;"/>
         <Span :text="message"/>
       </Label>
-      <RiveView marginTop="16" ref="refRive" src="res://raw/xxxx.riv" autoPlay="true"></RiveView>
+
+      <RiveView marginTop="16" ref="refRive" src="@/assets/example" height="200" width="200" autoPlay="true"></RiveView>
+      <RiveView marginTop="16" ref="refRive" src="res://raw/example.riv" autoPlay="true"></RiveView>
+
       <Button :text="play" @tap="update" horizontalAlignment="center" verticalAlignment="center"></Button>
     </StackLayout>
   </Page>
