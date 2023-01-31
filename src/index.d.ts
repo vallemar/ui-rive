@@ -3,7 +3,7 @@ import {View} from '@nativescript/core';
 
 export class RiveView extends View {
     /**
-     * LottieAnimationView
+     * app.rive.runtime.kotlin.RiveAnimationView
      */
     readonly android: any;
 
