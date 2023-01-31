@@ -23,7 +23,7 @@ import Direction = app.rive.runtime.kotlin.core.Direction;
 import InputStream = java.io.InputStream;
 import Charset = java.nio.charset.Charset;
 import FileInputStream = java.io.FileInputStream;
-import {RiveDirection, RiveLoop} from "@nativescript-community/ui-rive/index";
+import {RiveAlignment, RiveDirection, RiveFit, RiveLoop} from "@nativescript-community/ui-rive/index";
 
 let LottieProperty;
 let LottieKeyPath;
@@ -104,7 +104,8 @@ export class RiveView extends RiveViewBase {
         }
 
         if (this.autoPlay) {
-            this.play();
+            this.nativeViewProtected.reset();
+            this.init();
         }
 
     }
@@ -114,18 +115,18 @@ export class RiveView extends RiveViewBase {
     }
 
     [fitProperty.getDefault]() {
-        return Fit.CONTAIN;
+        return RiveFit.CONTAIN;
     }
 
-    [fitProperty.setNative](value: Fit) {
+    [fitProperty.setNative](value: RiveFit) {
         this.nativeViewProtected.setFit(value);
     }
 
     [alignmentProperty.getDefault]() {
-        return Alignment.CENTER;
+        return RiveAlignment.CENTER;
     }
 
-    [alignmentProperty.setNative](value: Alignment) {
+    [alignmentProperty.setNative](value: RiveAlignment) {
         this.nativeViewProtected.setAlignment(value);
     }
 
@@ -148,8 +149,8 @@ export class RiveView extends RiveViewBase {
                     null, //this.animation,
                     null, //this.stateMachin,
                     this.autoPlay,
-                    this.fit,
-                    this.alignment,
+                    this.getFit(this.fit),
+                    this.getAlignment(this.alignment),
                     Loop.AUTO//this.loop
                 )
             }
@@ -161,15 +162,15 @@ export class RiveView extends RiveViewBase {
     }
 
     public play(loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, settleInitialState: true) {
-        this.nativeViewProtected.play(loop, direction, settleInitialState)
+        this.nativeViewProtected.play(this.getLoop(loop), this.getDirection(direction), settleInitialState)
     }
 
     public playWithAnimations(animationNames: string[], loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines: false, settleInitialState: true) {
-        this.nativeViewProtected.play(this.buildList(animationNames), loop, direction, areStateMachines, settleInitialState)
+        this.nativeViewProtected.play(this.buildList(animationNames), this.getLoop(loop), this.getDirection(direction), areStateMachines, settleInitialState)
     }
 
     public playWithAnimation(animationName: string, loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines: false, settleInitialState: true) {
-        this.nativeViewProtected.play(animationName, loop, direction, areStateMachines, settleInitialState)
+        this.nativeViewProtected.play(animationName, this.getLoop(loop), this.getDirection(direction), areStateMachines, settleInitialState)
     }
 
     public stop(): void {
@@ -249,5 +250,71 @@ export class RiveView extends RiveViewBase {
         const animations = new java.util.ArrayList();
         array.forEach(item => (animations.add(item)))
         return animations;
+    }
+
+
+    private getLoop(riveLoop: RiveLoop): Loop {
+        switch (riveLoop) {
+            case RiveLoop.ONESHOT:
+                return Loop.ONESHOT;
+            case RiveLoop.LOOP:
+                return Loop.LOOP;
+            case RiveLoop.PINGPONG:
+                return Loop.PINGPONG;
+            default:
+                return Loop.AUTO;
+        }
+    }
+
+    private getDirection(riveDirection: RiveDirection): Direction {
+        switch (riveDirection) {
+            case RiveDirection.BACKWARDS:
+                return Direction.BACKWARDS;
+            case RiveDirection.FORWARDS:
+                return Direction.FORWARDS;
+            default:
+                return Direction.AUTO;
+        }
+    }
+
+    private getFit(riveFit: RiveFit): Fit {
+        switch (riveFit) {
+            case RiveFit.FILL:
+                return Fit.FILL;
+            case RiveFit.CONTAIN:
+                return Fit.CONTAIN;
+            case RiveFit.COVER:
+                return Fit.COVER;
+            case RiveFit.FIT_WIDTH:
+                return Fit.FIT_WIDTH;
+            case RiveFit.FIT_HEIGHT:
+                return Fit.FIT_HEIGHT;
+            case RiveFit.SCALE_DOWN:
+                return Fit.SCALE_DOWN;
+            default:
+                return Fit.NONE;
+        }
+    }
+
+
+    private getAlignment(riveAlignment: RiveAlignment): Alignment {
+        switch (riveAlignment) {
+            case RiveAlignment.TOP_LEFT:
+                return Alignment.TOP_LEFT;
+            case RiveAlignment.TOP_CENTER:
+                return Alignment.TOP_CENTER;
+            case RiveAlignment.TOP_RIGHT:
+                return Alignment.TOP_RIGHT;
+            case RiveAlignment.CENTER_LEFT:
+                return Alignment.CENTER_LEFT;
+            case RiveAlignment.CENTER_RIGHT:
+                return Alignment.CENTER_RIGHT;
+            case RiveAlignment.BOTTOM_LEFT:
+                return Alignment.BOTTOM_LEFT;
+            case RiveAlignment.BOTTOM_RIGHT:
+                return Alignment.BOTTOM_RIGHT;
+            default:
+                return Alignment.CENTER;
+        }
     }
 }

@@ -40,11 +40,11 @@ export default {
     update() {
       const riveView = this.$refs.refRive.nativeView;
 
-      if (riveView.isAnimating()) {
-        riveView.stopAnimation()
+      if (riveView.isPlaying()) {
+        riveView.stop()
       } else {
 
-        riveView.playAnimation()
+        riveView.play()
         // riveView.playAnimation()
       }
     }

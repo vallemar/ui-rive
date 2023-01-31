@@ -66,20 +66,20 @@ export class RiveView extends View {
 }
 
 
-export enum RiveLoop {
+export declare const enum RiveLoop {
     ONESHOT,
     LOOP,
     PINGPONG,
     AUTO,
 }
 
-export enum RiveDirection {
+export declare const enum RiveDirection {
     BACKWARDS,
     FORWARDS,
     AUTO,
 }
 
-export enum RiveFit {
+export declare const enum RiveFit {
     FILL,
     CONTAIN,
     COVER,
@@ -89,7 +89,7 @@ export enum RiveFit {
     SCALE_DOWN,
 }
 
-export enum RiveAlignment {
+export declare const enum RiveAlignment {
     TOP_LEFT,
     TOP_CENTER,
     TOP_RIGHT,
