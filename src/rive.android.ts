@@ -9,9 +9,8 @@ import {Color, File, Folder, ImageAsset, knownFolders, Property, Utils} from '@n
 import {
     RiveViewBase,
     autoPlayProperty,
-    loopProperty,
     srcProperty,
-    fitProperty, alignmentProperty, stateMachinProperty, animationProperty, artboardProperty, directionProperty
+    fitProperty, alignmentProperty, artboardProperty
 } from './rive.common';
 import {clamp} from './utils';
 import Drawable = android.graphics.drawable.Drawable;
@@ -24,6 +23,7 @@ import Direction = app.rive.runtime.kotlin.core.Direction;
 import InputStream = java.io.InputStream;
 import Charset = java.nio.charset.Charset;
 import FileInputStream = java.io.FileInputStream;
+import {RiveDirection, RiveLoop} from "@nativescript-community/ui-rive/index";
 
 let LottieProperty;
 let LottieKeyPath;
@@ -104,22 +104,10 @@ export class RiveView extends RiveViewBase {
         }
 
         if (this.autoPlay) {
-            this.playAnimation();
+            this.play();
         }
 
     }
-
-    [loopProperty.setNative](loop: Loop) {
-        if (this.isAnimating()) {
-            this.pauseAnimation();
-            this.playAnimation()
-        }
-    }
-
-    [loopProperty.getDefault](loop: Loop) {
-        return Loop.AUTO;
-    }
-
 
     [autoPlayProperty.setNative](autoPlay: boolean) {
         this.nativeViewProtected.setAutoplay(autoPlay);
@@ -150,70 +138,116 @@ export class RiveView extends RiveViewBase {
         this.nativeViewProtected.setArtboardName(value);
     }
 
-    [animationProperty.getDefault]() {
-        return null;
-    }
 
-    [directionProperty.setNative](value: Direction | null) {
-
-    }
-
-    [directionProperty.getDefault]() {
-        return Direction.AUTO;
-    }
-
-    //TODO:
-    [animationProperty.setNative](value: string | null) {
-    }
-
-    [animationProperty.getDefault]() {
-        return null
-    }
-
-    [stateMachinProperty.getDefault]() {
-        return null;
-    }
-
-    //TODO:
-    [stateMachinProperty.setNative](value: string | null) {
-    }
-
-    public playAnimation = (): void => {
+    public init = (): void => {
         if (this.nativeViewProtected) {
-            if (!this.isAnimating()) {
-                if (this.nativeViewProtected.getAnimations().size() === 0 && !this.animation) {
-                    this.nativeViewProtected.setRiveBytes(
-                        this.bytes,
-                        this.artboard,
-                        this.animation,
-                        this.stateMachin,
-                        this.autoPlay,
-                        this.fit,
-                        this.alignment,
-                        this.loop
-                    )
-                } else {
-                    this.nativeViewProtected.play(this.animation, this.loop, this.direction, false, true)
-                }
+            if (!this.isPlaying()) {
+                this.nativeViewProtected.setRiveBytes(
+                    this.bytes,
+                    this.artboard,
+                    null, //this.animation,
+                    null, //this.stateMachin,
+                    this.autoPlay,
+                    this.fit,
+                    this.alignment,
+                    Loop.AUTO//this.loop
+                )
             }
         }
     };
 
-
-    public isAnimating(): boolean {
+    public isPlaying(): boolean {
         return this.nativeViewProtected ? this.nativeViewProtected.isPlaying() : false;
     }
 
-    public stopAnimation(): void {
+    public play(loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, settleInitialState: true) {
+        this.nativeViewProtected.play(loop, direction, settleInitialState)
+    }
+
+    public playWithAnimations(animationNames: string[], loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines: false, settleInitialState: true) {
+        this.nativeViewProtected.play(this.buildList(animationNames), loop, direction, areStateMachines, settleInitialState)
+    }
+
+    public playWithAnimation(animationName: string, loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines: false, settleInitialState: true) {
+        this.nativeViewProtected.play(animationName, loop, direction, areStateMachines, settleInitialState)
+    }
+
+    public stop(): void {
         if (this.nativeViewProtected) {
             this.nativeViewProtected.stop();
         }
     }
 
-    public pauseAnimation(): void {
+    public stopWithAnimation(animationName: string, areStateMachines: boolean): void {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.pause(animationName, areStateMachines);
+        }
+    }
+
+    public stopWithAnimations(animationNames: string[], areStateMachines: boolean): void {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.pause(this.buildList(animationNames), areStateMachines);
+        }
+    }
+
+    public pause(): void {
         if (this.nativeViewProtected) {
             this.nativeViewProtected.pause();
-
         }
+    }
+
+    public pauseWithAnimation(animationName: string, areStateMachines: boolean): void {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.pause(animationName, areStateMachines);
+        }
+    }
+
+    public pauseWithAnimations(animationNames: string[], areStateMachines: boolean): void {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.pause(this.buildList(animationNames), areStateMachines);
+        }
+    }
+
+    public reset(): void {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.reset();
+        }
+    }
+
+    public fireState(stateMachineName: string, inputName: string): void {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.fireState(stateMachineName, inputName);
+        }
+    }
+
+    public setBooleanState(stateMachineName: string, inputName: string, value): void {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.setBooleanState(stateMachineName, inputName, value);
+        }
+    }
+
+    public setNumberState(stateMachineName: string, inputName: string, value): void {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.setNumberState(stateMachineName, inputName, value);
+        }
+    }
+
+    public getStateMachines() {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.getStateMachines();
+        }
+    }
+
+    public getAnimations() {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.getAnimations();
+        }
+    }
+
+
+    private buildList(array: string[]): java.util.ArrayList<any> {
+        const animations = new java.util.ArrayList();
+        array.forEach(item => (animations.add(item)))
+        return animations;
     }
 }

@@ -121,7 +121,7 @@ declare module app {
 					public setAutoplay(param0: boolean): void;
 					public onTouchEvent(param0: globalAndroid.view.MotionEvent): boolean;
 					public getAlignment(): app.rive.runtime.kotlin;
-					public pause(param0: java.util.List<string>, param1: boolean): void;
+					public pause(animationNames: java.util.List<string>, areStateMachines: boolean): void;
 					public getDefaultAutoplay(): boolean;
 					public registerListener(param0: any): void;
 					public getAnimations(): java.util.List<app.rive.runtime.kotlin>;

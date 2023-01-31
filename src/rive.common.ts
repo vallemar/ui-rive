@@ -1,31 +1,56 @@
-/**********************************************************************************
- * (c) 2017, Nathan Walker.
- * Licensed under the MIT license.
- *
- * Version 1.0.0                                           walkerrunpdx@gmail.com
- **********************************************************************************/
-
 import {Property, View, booleanConverter} from '@nativescript/core';
-import Loop = app.rive.runtime.kotlin.core.Loop;
-import Fit = app.rive.runtime.kotlin.core.Fit;
-import Alignment = app.rive.runtime.kotlin.core.Alignment;
-import Direction = app.rive.runtime.kotlin.core.Direction;
+import {RiveAlignment, RiveDirection, RiveFit, RiveLoop} from "@nativescript-community/ui-rive/index";
 
 export abstract class RiveViewBase extends View {
     public src: string;
     public autoPlay: boolean;
-    public loop: Loop;
-    public alignment: Alignment;
-    public direction: Direction | null
-    public fit: Fit;
+    public alignment: RiveAlignment;
+    public fit: RiveFit;
     public artboard: string | null
-    public animation: string | null
-    public stateMachin: string | null
 
+    /*
+    * loop: default AUTO
+    * direction: default AUTO
+    * */
+    public abstract play(loop?: RiveLoop, direction?: RiveDirection, settleInitialState?: true): void;
 
-    public abstract playAnimation(): void;
-    public abstract stopAnimation(): void;
-    public abstract pauseAnimation(): void;
+    /*
+    * loop: default AUTO
+    * direction: default AUTO
+    * */
+    public abstract playWithAnimations(animationNames: string[], loop?: RiveLoop, direction?: RiveDirection, areStateMachines?: false, settleInitialState?: true): void;
+
+    /*
+    * loop: default AUTO
+    * direction: default AUTO
+    * */
+    public abstract playWithAnimation(animationName: string, loop?: RiveLoop, direction?: RiveDirection, areStateMachines?: false, settleInitialState?: true): void;
+
+    public abstract stop(): void;
+
+    public abstract stopWithAnimations(animationNames: string[], areStateMachines?: false): void;
+
+    public abstract stopWithAnimation(animationName: String, isStateMachine?: false): void;
+
+    public abstract pause(): void;
+
+    public abstract pauseWithAnimation(animationName: string, areStateMachines?: false): void;
+
+    public abstract pauseWithAnimations(animationNames: string[], areStateMachines?: false): void;
+
+    public abstract reset(): void;
+
+    public abstract fireState(stateMachineName: string, inputName: string): void;
+
+    public abstract setBooleanState(stateMachineName: string, inputName: string, value: boolean): void;
+
+    public abstract setNumberState(stateMachineName: string, inputName: string, value: number): void;
+
+    public abstract isPlaying(): boolean;
+
+    public abstract getStateMachines();
+
+    public abstract getAnimations();
 }
 
 export const srcProperty = new Property<RiveViewBase, string>({
@@ -35,27 +60,21 @@ srcProperty.register(RiveViewBase);
 
 export const autoPlayProperty = new Property<RiveViewBase, boolean>({
     name: 'autoPlay',
-    defaultValue: false,
+    defaultValue: true,
     valueConverter: booleanConverter
 });
 autoPlayProperty.register(RiveViewBase);
 
-export const loopProperty = new Property<RiveViewBase, Loop>({
-    name: 'loop',
-    defaultValue: Loop.AUTO,
-});
-loopProperty.register(RiveViewBase);
-
-export const fitProperty = new Property<RiveViewBase, Fit>({
+export const fitProperty = new Property<RiveViewBase, RiveFit>({
     name: 'fit',
-    defaultValue: Fit.CONTAIN,
+    defaultValue: RiveFit.CONTAIN,
     affectsLayout: global.isIOS
 });
 fitProperty.register(RiveViewBase);
 
-export const alignmentProperty = new Property<RiveViewBase, Alignment>({
+export const alignmentProperty = new Property<RiveViewBase, RiveAlignment>({
     name: 'alignment',
-    defaultValue: Alignment.CENTER,
+    defaultValue: RiveAlignment.CENTER,
     affectsLayout: global.isIOS
 });
 alignmentProperty.register(RiveViewBase);
@@ -66,23 +85,9 @@ export const artboardProperty = new Property<RiveViewBase, (string | null)>({
 });
 artboardProperty.register(RiveViewBase);
 
-export const animationProperty = new Property<RiveViewBase, (string | null)>({
-    name: 'animation',
-    defaultValue: null
-});
-animationProperty.register(RiveViewBase);
 
-export const stateMachinProperty = new Property<RiveViewBase, (string | null)>({
-    name: 'stateMachin',
-    defaultValue: null
-});
-stateMachinProperty.register(RiveViewBase);
 
-export const directionProperty = new Property<RiveViewBase, (Direction | null)>({
-    name: 'direction',
-    defaultValue: null
-});
-directionProperty.register(RiveViewBase);
+
 
 
 
