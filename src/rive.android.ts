@@ -183,11 +183,11 @@ export class RiveView extends RiveViewBase {
         return this.nativeViewProtected ? this.nativeViewProtected.isPlaying() : false;
     }
 
-    public play(loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, settleInitialState: true) {
+    public play(loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, settleInitialState = true) {
         this.nativeViewProtected.play(this.getLoop(loop), this.getDirection(direction), settleInitialState)
     }
 
-    public playWithAnimations(animationNames: string | string[], loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines: false, settleInitialState: true) {
+    public playWithAnimations(animationNames: string | string[] = [], loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines = false, settleInitialState = true) {
         if (Array.isArray(animationNames)) {
             this.nativeViewProtected.play(this.buildList(animationNames), this.getLoop(loop), this.getDirection(direction), areStateMachines, settleInitialState)
         } else if (typeof animationNames === 'string') {
@@ -201,15 +201,11 @@ export class RiveView extends RiveViewBase {
         }
     }
 
-    public stopWithAnimation(animationName: string, areStateMachines: boolean): void {
-        if (this.nativeViewProtected) {
-            this.nativeViewProtected.pause(animationName, areStateMachines);
-        }
-    }
-
-    public stopWithAnimations(animationNames: string[], areStateMachines: boolean): void {
-        if (this.nativeViewProtected) {
-            this.nativeViewProtected.pause(this.buildList(animationNames), areStateMachines);
+    public stopWithAnimations(animationNames: string[] = [], areStateMachines = false): void {
+        if (Array.isArray(animationNames)) {
+            this.nativeViewProtected.stop(this.buildList(animationNames), areStateMachines);
+        } else if (typeof animationNames === 'string') {
+            this.nativeViewProtected.stop(animationNames, areStateMachines);
         }
     }
 
@@ -219,7 +215,7 @@ export class RiveView extends RiveViewBase {
         }
     }
 
-    public pauseWithAnimations(animationNames: string[], areStateMachines: boolean): void {
+    public pauseWithAnimations(animationNames: string | string[] = [], areStateMachines = false): void {
         if (Array.isArray(animationNames)) {
             this.nativeViewProtected.pause(this.buildList(animationNames), areStateMachines);
         } else if (typeof animationNames === 'string') {

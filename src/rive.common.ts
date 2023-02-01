@@ -69,16 +69,11 @@ export abstract class RiveViewBase extends View {
      */
     public abstract stop(): void;
 
-    /**
-     * Stops any animationName.
-     */
-    public abstract stopWithAnimation(animationNames?: string, isStateMachine?: false): void;
-
 
     /**
-     * Stops any  of the provided animationNames.
+     * Stops any of the provided animationNames.
      */
-    public abstract stopWithAnimations(animationNames: string[], areStateMachines?: false): void;
+    public abstract stopWithAnimations(animationNames: string | string[], areStateMachines?: false): void;
 
     /**
      * Pauses all playing animations.
