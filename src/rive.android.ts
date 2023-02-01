@@ -1,4 +1,4 @@
-import {Color, File, Folder, ImageAsset, knownFolders, Property, Utils} from '@nativescript/core';
+import {File, Folder, knownFolders, Utils} from '@nativescript/core';
 import {
     RiveViewBase,
     autoPlayProperty,
@@ -26,41 +26,36 @@ import PlayableInstance = app.rive.runtime.kotlin.core.PlayableInstance;
 class Listener extends java.lang.Object implements RiveArtboardRenderer.Listener {
     owner: RiveView
 
-    constructor(owner) {
+    constructor(owner: RiveView) {
         super();
         this.owner = owner;
     }
 
     notifyPlay(animation: PlayableInstance): void {
-        console.log("notifyPlay")
         if (this.owner.onPlay) {
             this.owner.onPlay(animation.getName())
         }
     }
 
     notifyStop(animation: PlayableInstance): void {
-        console.log("notifyStop")
         if (this.owner.onStop) {
             this.owner.onStop(animation.getName())
         }
     }
 
     notifyPause(animation: PlayableInstance): void {
-        console.log("notifyPause")
         if (this.owner.onPause) {
             this.owner.onPause(animation.getName())
         }
     }
 
     notifyLoop(animation: PlayableInstance): void {
-        console.log("notifyLoop")
         if (this.owner.onLoopEnd) {
             this.owner.onLoopEnd(animation.getName(), this.owner.loop)
         }
     }
 
     notifyStateChanged(stateMachineName: string, stateName: string): void {
-        console.log("notifyStateChanged")
         if (this.owner.onStateChanged) {
             this.owner.onStateChanged(stateMachineName, stateName)
         }
@@ -89,7 +84,7 @@ export class RiveView extends RiveViewBase {
 
     async [srcProperty.setNative](src: string) {
         if (!src) {
-            console.log("[ui-rive] File not supported")
+            console.log("[ui-rive] No rive file specified")
         } else if (src.startsWith(Utils.RESOURCE_PREFIX)) {
             const resName = src.replace(Utils.RESOURCE_PREFIX + "raw/", '').replace(".riv", "");
             const inStream: InputStream = this._context.getResources().openRawResource(this._context.getResources().getIdentifier(resName, "raw", this._context.getPackageName()));
@@ -262,9 +257,21 @@ export class RiveView extends RiveViewBase {
         }
     }
 
+    public getPlayingStateMachines() {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.getPlayingStateMachines();
+        }
+    }
+
     public getAnimations() {
         if (this.nativeViewProtected) {
             this.nativeViewProtected.getAnimations();
+        }
+    }
+
+    public getPlayingAnimations() {
+        if (this.nativeViewProtected) {
+            this.nativeViewProtected.getPlayingAnimations();
         }
     }
 
