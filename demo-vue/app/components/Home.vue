@@ -10,28 +10,28 @@
         <Span :text="message"/>
       </Label>
 
-      <RiveView marginTop="16" ref="refRive" src="@/assets/example" height="200" width="200" autoPlay="true"></RiveView>
-      <RiveView marginTop="16" ref="refRive" src="res://raw/example.riv" autoPlay="true"></RiveView>
+      <RiveView marginTop="16" :onPlay="onPlay" :onStop="onStop" :onPause="onPause" :onLoopEnd="onLoopEnd"
+                :onStateChanged="onStateChanged" ref="refRive" src="@/assets/compass" height="200" width="200"
+                autoPlay="true"></RiveView>
+      <RiveView marginTop="16" src="@/assets/button" height="200" width="200" autoPlay="true"></RiveView>
+      <!--
+            <RiveView marginTop="16"  src="res://raw/example.riv" autoPlay="true"></RiveView>
+      -->
 
-      <Button :text="play" @tap="update" horizontalAlignment="center" verticalAlignment="center"></Button>
+      <Button :text="play ? 'Stop' : 'Play'" @tap="update" horizontalAlignment="center"
+              verticalAlignment="center"></Button>
     </StackLayout>
   </Page>
 </template>
 
-<script>
-function generateItems(count, offset = 0) {
-  return new Array(count).fill().map((_, i) => ({
-    name: `Item ${i}`,
-    description: `Item ${i} description`,
-    lottie: '~/assets/LottieLogo1.json'
-  }));
-}
+<script lang="ts">
+import {RiveView} from "@nativescript-community/ui-rive/rive.android";
+
 
 export default {
   data() {
     return {
       play: true,
-      items: generateItems(50),
     };
   },
   computed: {
@@ -41,15 +41,30 @@ export default {
   },
   methods: {
     update() {
-      const riveView = this.$refs.refRive.nativeView;
-
+      const riveView = this.$refs.refRive.nativeView as RiveView;
       if (riveView.isPlaying()) {
         riveView.stop()
+        this.play = false;
       } else {
-
         riveView.play()
-        // riveView.playAnimation()
+        this.play = true;
+
       }
+    },
+    onPlay() {
+      console.log("onPlay")
+    },
+    onStop() {
+      console.log("onStop")
+    },
+    onPause() {
+      console.log("onPause")
+    },
+    onLoopEnd() {
+      console.log("onLoopEnd")
+    },
+    onStateChanged() {
+      console.log("onStateChanged")
     }
   }
 };

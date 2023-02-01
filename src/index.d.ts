@@ -16,9 +16,11 @@ export class RiveView extends View {
 
     public src: string;
     public autoPlay: boolean;
-    public alignment: RiveAlignment;
-    public fit: RiveFit;
-    public artboard: string | null
+    public alignment?: RiveAlignment;
+    public fit?: RiveFit;
+    public artboardName?: string
+    public animationName?: string;
+    public stateMachineName?: string;
 
     /*
     * loop: default AUTO

@@ -3,32 +3,78 @@ import {
     RiveViewBase,
     autoPlayProperty,
     srcProperty,
-    fitProperty, alignmentProperty, artboardProperty
+    fitProperty,
+    alignmentProperty,
+    artboardNameProperty,
+    onPlayProperty,
+    onPauseProperty,
+    onStopProperty,
+    onLoopEndProperty, onStateChangedProperty
 } from './rive.common';
-import {clamp} from './utils';
-import Drawable = android.graphics.drawable.Drawable;
-import Resources = android.content.res.Resources;
+import {RiveAlignment, RiveDirection, RiveFit, RiveLoop} from "@nativescript-community/ui-rive/index";
+
 import Fit = app.rive.runtime.kotlin.core.Fit;
 import Alignment = app.rive.runtime.kotlin.core.Alignment;
 import Loop = app.rive.runtime.kotlin.core.Loop;
-import Rive = app.rive.runtime.kotlin.core.Rive;
 import Direction = app.rive.runtime.kotlin.core.Direction;
 import InputStream = java.io.InputStream;
-import Charset = java.nio.charset.Charset;
-import FileInputStream = java.io.FileInputStream;
-import {RiveAlignment, RiveDirection, RiveFit, RiveLoop} from "@nativescript-community/ui-rive/index";
+import RiveArtboardRenderer = app.rive.runtime.kotlin.RiveArtboardRenderer;
+import PlayableInstance = app.rive.runtime.kotlin.core.PlayableInstance;
+
+@NativeClass
+@Interfaces([RiveArtboardRenderer.Listener])
+class Listener extends java.lang.Object implements RiveArtboardRenderer.Listener {
+    owner: RiveView
+
+    constructor(owner) {
+        super();
+        this.owner = owner;
+    }
+
+    notifyPlay(animation: PlayableInstance): void {
+        console.log("notifyPlay")
+        if (this.owner.onPlay) {
+            this.owner.onPlay(animation.getName())
+        }
+    }
+
+    notifyStop(animation: PlayableInstance): void {
+        console.log("notifyStop")
+        if (this.owner.onStop) {
+            this.owner.onStop(animation.getName())
+        }
+    }
+
+    notifyPause(animation: PlayableInstance): void {
+        console.log("notifyPause")
+        if (this.owner.onPause) {
+            this.owner.onPause(animation.getName())
+        }
+    }
+
+    notifyLoop(animation: PlayableInstance): void {
+        console.log("notifyLoop")
+        if (this.owner.onLoopEnd) {
+            this.owner.onLoopEnd(animation.getName(), this.owner.loop)
+        }
+    }
+
+    notifyStateChanged(stateMachineName: string, stateName: string): void {
+        console.log("notifyStateChanged")
+        if (this.owner.onStateChanged) {
+            this.owner.onStateChanged(stateMachineName, stateName)
+        }
+    }
 
 
-let LottieProperty;
-let LottieKeyPath;
-let LottieValueCallback;
-
-const cache = new Map();
+}
 
 export class RiveView extends RiveViewBase {
 
     bytes: any;
     nativeViewProtected: app.rive.runtime.kotlin.RiveAnimationView;
+
+    listener: Listener;
 
     public createNativeView() {
         return new app.rive.runtime.kotlin.RiveAnimationView(this._context, null);
@@ -91,27 +137,48 @@ export class RiveView extends RiveViewBase {
     }
 
 
-    [artboardProperty.getDefault]() {
+    [artboardNameProperty.getDefault]() {
         return null;
     }
 
-    [artboardProperty.setNative](value: string | null) {
+    [artboardNameProperty.setNative](value: string | null) {
         this.nativeViewProtected.setArtboardName(value);
+    }
+
+    [onPlayProperty.setNative](value: () => void) {
+        this.addListener();
+    }
+
+    [onPauseProperty.setNative](value: () => void) {
+        this.addListener();
+    }
+
+    [onStopProperty.setNative](value: () => void) {
+        this.addListener();
+    }
+
+    [onLoopEndProperty.setNative](value: () => void) {
+        this.addListener();
+    }
+
+    [onStateChangedProperty.setNative](value: () => void) {
+        this.addListener();
     }
 
 
     public init = (): void => {
         if (this.nativeViewProtected) {
             if (!this.isPlaying()) {
+                this.nativeViewProtected.reset();
                 this.nativeViewProtected.setRiveBytes(
                     this.bytes,
-                    this.artboard,
-                    null, //this.animation,
-                    null, //this.stateMachin,
+                    this.artboardName,
+                    this.animationName,
+                    this.stateMachineName,
                     this.autoPlay,
                     this.getFit(this.fit),
                     this.getAlignment(this.alignment),
-                    Loop.AUTO//this.loop
+                    this.getLoop(this.loop)
                 )
             }
         }
@@ -125,12 +192,12 @@ export class RiveView extends RiveViewBase {
         this.nativeViewProtected.play(this.getLoop(loop), this.getDirection(direction), settleInitialState)
     }
 
-    public playWithAnimations(animationNames: string[], loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines: false, settleInitialState: true) {
-        this.nativeViewProtected.play(this.buildList(animationNames), this.getLoop(loop), this.getDirection(direction), areStateMachines, settleInitialState)
-    }
-
-    public playWithAnimation(animationName: string, loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines: false, settleInitialState: true) {
-        this.nativeViewProtected.play(animationName, this.getLoop(loop), this.getDirection(direction), areStateMachines, settleInitialState)
+    public playWithAnimations(animationNames: string | string[], loop = RiveLoop.AUTO, direction = RiveDirection.AUTO, areStateMachines: false, settleInitialState: true) {
+        if (Array.isArray(animationNames)) {
+            this.nativeViewProtected.play(this.buildList(animationNames), this.getLoop(loop), this.getDirection(direction), areStateMachines, settleInitialState)
+        } else if (typeof animationNames === 'string') {
+            this.nativeViewProtected.play(animationNames, this.getLoop(loop), this.getDirection(direction), areStateMachines, settleInitialState)
+        }
     }
 
     public stop(): void {
@@ -157,15 +224,11 @@ export class RiveView extends RiveViewBase {
         }
     }
 
-    public pauseWithAnimation(animationName: string, areStateMachines: boolean): void {
-        if (this.nativeViewProtected) {
-            this.nativeViewProtected.pause(animationName, areStateMachines);
-        }
-    }
-
     public pauseWithAnimations(animationNames: string[], areStateMachines: boolean): void {
-        if (this.nativeViewProtected) {
+        if (Array.isArray(animationNames)) {
             this.nativeViewProtected.pause(this.buildList(animationNames), areStateMachines);
+        } else if (typeof animationNames === 'string') {
+            this.nativeViewProtected.pause(animationNames, areStateMachines);
         }
     }
 
@@ -205,6 +268,13 @@ export class RiveView extends RiveViewBase {
         }
     }
 
+
+    private addListener() {
+        if (!this.listener) {
+            this.listener = new Listener(this);
+            this.nativeViewProtected.registerListener(this.listener);
+        }
+    }
 
     private buildList(array: string[]): java.util.ArrayList<any> {
         const animations = new java.util.ArrayList();
